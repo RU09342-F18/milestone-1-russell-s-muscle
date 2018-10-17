@@ -1,6 +1,6 @@
 //https://www.embeddedrelated.com/showarticle/420.php
 //TI REsource explorer msp430g2xx3_uscia0_uart_01_9600.c
-#include <msp430.h>
+#include <msp430.h> 
 
 
 /**
@@ -11,8 +11,8 @@ int Input = 0;
 int count = 0;
 int main(void)
 {
-    WDTCTL = WDTPW | WDTHOLD;   // stop watchdog timer
-
+	WDTCTL = WDTPW | WDTHOLD;	// stop watchdog timer
+	
 
 }
 
@@ -56,7 +56,7 @@ void configureTimer ()
 
 void configureUART ()
 {
-    P1SEL |= BIT1+BIT2;
+ P1SEL |= BIT1+BIT2;
     P1SEL2 |= BIT1+BIT2;
     UCA0CTL1 |= UCSSEL_2; // SMCLK
     UCA0BR0 = 9600; //sets to specified baud rate of 9600
@@ -64,7 +64,7 @@ void configureUART ()
     UCA0MCTL = UCBRS2 + UCBRS0; // Modulation UCBRSx = 5
     UCA0CTL1 &= ~UCSWRST; // **Initialize USCI state machine**
     UC0IE |= UCA0RXIE; // Enable USCI_A0 RX interrupt
-    UCOIE |=UCARXIE;
+    UC0IE |=UCARXIE;
 }
 
 #pragma vector=USCIAB0RX_VECTOR
@@ -75,14 +75,38 @@ __interrupt void USCI0RX_ISR(void) {
     UC0IE |= UCA0TXIE;
     Input |= UCA0RXBUF;
 
-    switch (count)
+    switch (count){
 
-    case (0)
+    case (0):
     commandlength |= Input;
+
+    if(commandlength >= 8){
+
+    UCA0TXBUF = commandlength - 3;
+
+    }
     break;
-    case (1)
 
+    case (1):
+        TA0CCR1 = Input;
+        break;
 
+    case (2):
+        TA1CCR1 = Input;
+        break;
+
+    case (3):
+        TA1CCR2 = Input;
+        break;
+
+    default:
+        if(commandlength - 3 >= 8)
+        {
+        UCA0TXBUF = Input;
+        }
+        break;
+    }
+     P2OUT &= ~BIT5;
 }
 
 #pragma vector=USCIAB0TX_VECTOR
@@ -90,5 +114,5 @@ __interrupt void USCI0TX_ISR(void) {
      P1OUT |= BIT0;
      P1OUT &= ~BIT0;
 
-     UCOIE &= ~UCA0TXIE;
+     UC0IE &= ~UCA0TXIE;
 }
