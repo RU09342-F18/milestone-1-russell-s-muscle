@@ -1,6 +1,6 @@
 //https://www.embeddedrelated.com/showarticle/420.php
 //TI REsource explorer msp430g2xx3_uscia0_uart_01_9600.c
-#include <msp430.h> 
+#include <msp430.h>
 
 
 /**
@@ -11,8 +11,11 @@ int Input = 0;
 int count = 0;
 int main(void)
 {
-	WDTCTL = WDTPW | WDTHOLD;	// stop watchdog timer
-	
+    WDTCTL = WDTPW | WDTHOLD;   // stop watchdog timer
+    configureLED();
+    configureTimer();
+    configureUART();
+    __bis_SR_register(LPM0_bits + GIE);
 
 }
 
@@ -60,11 +63,10 @@ void configureUART ()
     P1SEL2 |= BIT1+BIT2;
     UCA0CTL1 |= UCSSEL_2; // SMCLK
     UCA0BR0 = 9600; //sets to specified baud rate of 9600
-    UCA0BR1 = 9600; //sets to specified baud rate of 9600
+    UCA0BR1 = 0; //sets to specified baud rate of 9600
     UCA0MCTL = UCBRS2 + UCBRS0; // Modulation UCBRSx = 5
     UCA0CTL1 &= ~UCSWRST; // **Initialize USCI state machine**
     UC0IE |= UCA0RXIE; // Enable USCI_A0 RX interrupt
-    UC0IE |=UCARXIE;
 }
 
 #pragma vector=USCIAB0RX_VECTOR
