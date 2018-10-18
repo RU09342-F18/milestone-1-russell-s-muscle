@@ -116,7 +116,6 @@ P2OUT &= ~BIT5;
 #pragma vector=USCIAB0TX_VECTOR
 __interrupt void USCI0TX_ISR(void) {
      P1OUT |= BIT0;
-
      UC0IE &= ~UCA0TXIE;
      P1OUT &= ~BIT0;
 }
