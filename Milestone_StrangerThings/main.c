@@ -73,10 +73,6 @@ int main(void)
 
 #pragma vector=USCIAB0RX_VECTOR
 __interrupt void USCI0RX_ISR(void) {
-    //int commandlength = 0; =total
-    //int count = 0; =counter
-    //input = data
-
     P2OUT |= BIT5;
     UC0IE |= UCA0TXIE;
    char Input = UCA0RXBUF;
