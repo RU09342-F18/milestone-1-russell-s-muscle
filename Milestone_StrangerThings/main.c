@@ -16,11 +16,6 @@ void configureLED ()
     //P2.1 = Green LED
     //P2.4 = Blue LED
 
-    //determined in family guide that
-    //2.1 is for XXXX
-    //1.6 is for xxxx
-    //2.4 is for xxxx
-
     P1SEL |= BIT6;
     P1SEL2 &= ~BIT6;
     P1DIR |= BIT6;
