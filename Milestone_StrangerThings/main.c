@@ -82,8 +82,40 @@ __interrupt void USCI0RX_ISR(void) {
     UC0IE |= UCA0TXIE;
    char input = UCA0RXBUF;
 
+   if (count == 0)
+   {
+       count = input;
+       commandlength = input;
+       if (input>=8)
+       {
+           char size;
+           size = input - 3;
+           UCA0TXBUF = size;
+       }
+   }
 
-if (count == 0)
+   switch (commandlength - count){
+   case (1):
+
+            TA0CCR1 = input;
+        break;
+   case (2):
+    TA1CCR1=input;
+   break;
+   case (3):
+   TA1CCR2 = input;
+   break;
+   default:
+       if(commandlength>=8 && commandlength != count)
+       {
+           UCA0TXBUF = input;
+       }
+   break;
+   }
+   count --;
+   P2OUT &= ~BIT5;
+}
+/*if (count == 0)
 {
     count = input;
     commandlength = input;
@@ -116,7 +148,7 @@ else
 count --;
 P2OUT &= ~BIT5;
 }
-
+*/
 #pragma vector=USCIAB0TX_VECTOR
 __interrupt void USCI0TX_ISR(void) {
      P1OUT |= BIT0;
