@@ -1,5 +1,3 @@
-//https://www.embeddedrelated.com/showarticle/420.php
-//TI REsource explorer msp430g2xx3_uscia0_uart_01_9600.c
 #include <msp430.h>
 
 
